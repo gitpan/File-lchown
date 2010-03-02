@@ -22,7 +22,7 @@ is( $!+0, ENOENT, 'lchown() a non-existent file sets \$! == ENOENT' );
 
 SKIP: {
    my @groups = grep { $_ != $( } split ' ', $);
-   skip 1, "Not enough additional groups" unless @groups;
+   skip "Not enough additional groups", 2 unless @groups;
 
    symlink( "target", $testlink ) or die "Cannot symlink() - $!";
 

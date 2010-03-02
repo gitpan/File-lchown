@@ -44,6 +44,7 @@ lutimes(atime, mtime, ...)
     int i;
 
   CODE:
+#ifdef HAVE_LUTIMES
     if(!SvOK(atime) && !SvOK(mtime))
       tvp = NULL;
     else {
@@ -63,6 +64,9 @@ lutimes(atime, mtime, ...)
       if(lutimes(path, tvp) == 0)
         RETVAL++;
     }
+#else
+    croak("lutimes() not implemented");
+#endif
 
   OUTPUT:
     RETVAL

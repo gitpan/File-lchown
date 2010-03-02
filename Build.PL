@@ -2,9 +2,11 @@ use strict;
 use warnings;
 
 use Module::Build;
-use ExtUtils::CChecker;
+use ExtUtils::CChecker 0.03;
 
-ExtUtils::CChecker->new->assert_compile_run( 
+my $cc = ExtUtils::CChecker->new;
+
+$cc->assert_compile_run( 
    diag => "no lchown()",
    source => <<'EOF' );
 #include <stdlib.h>
@@ -16,10 +18,22 @@ int main(int argc, char *argv[]) {
 }
 EOF
 
-my $build = Module::Build->new(
+$cc->try_compile_run(
+   define => "HAVE_LUTIMES",
+   source => <<'EOF' );
+#include <stdlib.h>
+#include <unistd.h>
+int main(int argc, char *argv[]) {
+  if(lutimes(".", NULL) != 0)
+    exit(1);
+  exit(0);
+}
+EOF
+
+my $build = $cc->new_module_build(
    module_name => 'File::lchown',
    configure_requires => {
-      'ExtUtils::CChecker' => 0,
+      'ExtUtils::CChecker' => 0.03,
    },
    requires => {
    },

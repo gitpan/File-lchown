@@ -2,10 +2,14 @@
 
 use strict;
 
-use Test::More tests => 4;
+use Test::More;
 
 use File::lchown qw( lutimes );
 use POSIX qw( ENOENT );
+
+defined eval { lutimes(undef,undef) } or plan skip_all => "No lutimes()";
+
+plan tests => 4;
 
 my $testlink = "testlink";
 unlink $testlink if -l $testlink;
